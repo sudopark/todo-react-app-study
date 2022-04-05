@@ -2,7 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import Todo from './Todo';
 import React from 'react';
-import { Paper, List } from "@material-ui/core"
+import { Paper, List, Container } from "@material-ui/core"
+import AddTodo from './AddTodo';
 
 class App extends React.Component {
 
@@ -30,7 +31,12 @@ class App extends React.Component {
     );
 
     return (
-      <div className='App'> {todoItems} </div>
+      <div className='App'> 
+        <Container maxWidth="md">
+          <AddTodo />
+          <div className="TodoList"> {todoItems} </div>
+        </Container>
+      </div>
     );
   }
 }
