@@ -10,6 +10,7 @@ class Todo extends React.Component {
         // state는 리엑트가 관리하는 오브젝트 => 추후에 변경될 수 있는값 => 변경이후 다시 랜더링
         this.state = { item: props.item, readOnly: true };
         this.delete = props.delete;
+        this.update = props.update;
     }
 
     deleteEventHandler = () => {
@@ -20,6 +21,7 @@ class Todo extends React.Component {
         const thisItem = this.state.item;
         thisItem.done = !thisItem.done;
         this.setState({item: thisItem});
+        this.update(this.state.item);
     }
 
     offReadOnlyMode = () => {
@@ -36,9 +38,10 @@ class Todo extends React.Component {
     }
 
     enterKeyEventHandler = (e) => {
-        if (e.key == "Enter") {
+        if (e.key === "Enter") {
             console.log("turn on readOnly");
             this.setState({readOnly: true});
+            this.update(this.state.item);
         }
     }
 

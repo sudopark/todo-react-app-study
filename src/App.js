@@ -1,9 +1,10 @@
-import logo from './logo.svg';
+
 import './App.css';
 import Todo from './Todo';
 import React from 'react';
 import { Paper, List, Container } from "@material-ui/core"
 import AddTodo from './AddTodo';
+import { call } from './ApiService';
 
 class App extends React.Component {
 
@@ -15,36 +16,27 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const requestOptions = {
-      method: "GET",
-      headers: {"Content-Type" : "application/json"},
-    }
-
-    fetch("http://localhost:8181/todo", requestOptions)
-      .then((response) => response.json())
-      .then((response) => {
-        this.setState({items: response.data});
-      }, (error) => {
-        this.setState({error});
-      });
+    call("/todo", "GET").then((response) => 
+      this.setState({items: response.data})
+    );
   }
 
   addItem = (item) => {
-    const thisItems = this.state.items;
-    item.id = "ID-" + thisItems.length;
-    item.done = false;
-    thisItems.push(item);
-    this.setState({items: thisItems });
-    console.log("items: ", this.state.items);
+    call("/todo", "POST", item).then((response) => {
+      this.setState({items: response.data});
+    })
   }
 
   deleteItem = (item) => {
-    const thisItems = this.state.items;
-    console.log("Before update items: " + this.state.items);
-    const newItems = thisItems.filter(e => e.id != item.id);
-    this.setState({items: newItems}, () => {
-      console.log("Update items: " + this.state.items);
-    });
+    call("/todo", "DELETE", item).then((response) => {
+      this.setState({items: response.data});
+    })
+  }
+
+  updateItem = (item) => {
+    call("/todo", "PUT", item).then((response) => {
+      this.setState({items: response.data});
+    })
   }
 
   render() {
@@ -53,7 +45,12 @@ class App extends React.Component {
       <Paper style={{ margin: 16}}>
         <List>
           {this.state.items.map((item, idx) => (
-            <Todo item={item} key={item.id} delete={this.deleteItem} />
+            <Todo 
+              item={item} 
+              key={item.id} 
+              delete={this.deleteItem} 
+              update={this.updateItem}
+            />
           ))}
         </List>
       </Paper>
