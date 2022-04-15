@@ -30,3 +30,16 @@ export function call(api, method, body) {
           return Promise.reject(error);
         });
 }
+
+
+export function signin(userDTO) {
+    return call("/auth/signin", "POST", userDTO)
+    .then((response) => {
+        console.log("signin token => " + response.token);
+        // 403에러시에 로그인화면 라우팅은 공통로직이라치고 여기서했지만 성공했을때 라우팅하는것 처리도 여기가 맞나??
+        if(response.token) {
+            // token이 존재하는 경우 todo 화면으로 이동
+            window.location.href="/";
+        }
+    });
+}
