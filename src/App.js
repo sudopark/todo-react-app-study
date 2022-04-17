@@ -17,8 +17,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    call("/todo", "GET").then((response) => 
-      this.setState({items: response.data})
+    this.setState({isLoading: true})
+    call("/todo", "GET")
+    .then((response) => 
+      this.setState({items: response.data, isLoading: false})
     );
   }
 
@@ -74,13 +76,28 @@ class App extends React.Component {
       </AppBar>
     );
 
-    return (
-      <div className='App'> 
+    var todoListPage = (
+      <div>
         {navigationBar}
         <Container maxWidth="md">
           <AddTodo add={this.addItem}/>
           <div className="TodoList"> {todoItems} </div>
         </Container>
+      </div>
+    );
+
+    var loadingPage = (
+      <h1> 로딩중.. </h1>
+    );
+
+    var content = loadingPage;
+    if(!this.state.isLoading) {
+      content = todoListPage;
+    }
+
+    return (
+      <div className='App'> 
+        {content}
       </div>
     );
   }
