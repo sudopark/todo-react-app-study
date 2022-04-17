@@ -46,9 +46,15 @@ export function signin(userDTO) {
         // 403에러시에 로그인화면 라우팅은 공통로직이라치고 여기서했지만 성공했을때 라우팅하는것 처리도 여기가 맞나??
         if(response.token) {
             // token이 존재하는 경우 local storage에 저장
+            console.log("new token => " + response.token);
             localStorage.setItem("ACCESS_TOKEN", response.token);
             // token이 존재하는 경우 todo 화면으로 이동
             window.location.href="/";
         }
     });
+}
+
+export function signout() {
+    localStorage.setItem("ACCESS_TOKEN", null);
+    window.location.href="/login"
 }
