@@ -1,27 +1,28 @@
-
-
-import { Button, Container, Grid, Link, TextField, Typography } from "@material-ui/core";
 import React from "react";
-import { signin } from "./ApiService";
+import { Grid, Link, Button, Container, TextField, Typography } from "@material-ui/core";
+import { signup } from "./ApiService";
 
-class Login extends React.Component {
+class Signup extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
-    handleSubmit(event) {
 
-        // submit 버튼 누르면 리다이렉트됨(왜인지는 모름)
-        // https://stackoverflow.com/questions/35105132/how-to-submit-a-html-form-without-redirecting#:~:text=Stop%20the%20default%20behaviour%20of,event%20in%20your%20executeSearch%20function.
+    handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.target);
         const email = data.get("email");
         const password = data.get("password");
-        // 이후에 로그인 성공하면 라우팅 필요 + 에러처리
-        signin({ email: email, password: password });
-    }
+        const username = data.get("username");
+
+        signup({ email: email, password: password, username: username })
+        .then((response) => {
+            window.location.href = "/login";
+        })
+    };
+
 
     render() {
         return (
@@ -37,6 +38,17 @@ class Login extends React.Component {
                 { " "}
                 {/* submit 버튼을 클릭하면 handleSubmit 함수가 실행됨 */}
                 <Grid Container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="username"
+                            label="사용자 이름"
+                            name="username"
+                            autoFocus
+                        />
+                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             variant="outlined"
@@ -67,12 +79,16 @@ class Login extends React.Component {
                             variant="contained"
                             color="primary"
                         >
-                            로그인
+                            계정 생성
                         </Button>
                     </Grid>
-                    <Link href="/signup">
-                        계정이 없습니까? 여기서 가입해주세요.
-                    </Link>
+                </Grid>
+                <Grid container justify="fixed-end">
+                    <Grid item>
+                        <Link href="/login" variant="body2">
+                            이미 계정이 있습니까? 로그인하세요
+                        </Link>
+                    </Grid>
                 </Grid>
             </form>
 
@@ -81,4 +97,5 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+
+export default Signup;
