@@ -2,10 +2,17 @@ import { API_BASE_URL } from "./app-config"
 
 export function call(api, method, body) {
 
-    const options = {
-        headers: new Headers({
-            "Content-Type": "application/json" 
-        }),
+    let headers = new Headers({
+        "Content-Type": "application/json" 
+    });
+
+    const accessToken = localStorage.getItem("ACCESS_TOKEN");
+    if(accessToken && accessToken !== null) {
+        headers.append("Authorization", "Bearer " + accessToken);
+    }
+
+    let options = {
+        headers: headers,
         url: API_BASE_URL + api,
         method: method,
     };
@@ -38,6 +45,8 @@ export function signin(userDTO) {
         console.log("signin token => " + response.token);
         // 403에러시에 로그인화면 라우팅은 공통로직이라치고 여기서했지만 성공했을때 라우팅하는것 처리도 여기가 맞나??
         if(response.token) {
+            // token이 존재하는 경우 local storage에 저장
+            localStorage.setItem("ACCESS_TOKEN", response.token);
             // token이 존재하는 경우 todo 화면으로 이동
             window.location.href="/";
         }
